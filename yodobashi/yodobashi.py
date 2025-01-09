@@ -9,6 +9,9 @@ from bs4 import BeautifulSoup
 # https://www.yodobashi.com/product/100000001008874972/
 # 无货示例
 # https://www.yodobashi.com/product/100000001008874972/
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+}
 URL = "https://www.yodobashi.com/product/100000001008874972/"  # 替换为你的目标 URL
 BUTTON_TEXT = "ショッピングカートに入れる"  # 按钮上的文字
 SMTP_USER = "your_email@example.com"  # 替换为你的邮箱
@@ -33,7 +36,7 @@ def check_button():
         print(f"检测到代理配置：{proxies}")
 
         # 发送请求
-        response = requests.get(URL, proxies=proxies, timeout=20)
+        response = requests.get(URL, headers=HEADERS, proxies=proxies, timeout=30)
         response.raise_for_status()  # 如果响应错误，抛出异常
 
         # 解析 HTML

@@ -1,0 +1,67 @@
+#name: Scheduled Task
+#
+#on:
+#  schedule:
+#    - cron: "0 0 * * *"  # 每天 0 点运行
+#  workflow_dispatch:  # 手动触发任务
+#
+#jobs:
+#  check-button-job:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#
+#      - name: Set up Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: "3.13.0"
+#
+#      - name: Install dependencies
+#        run: pip install requests beautifulsoup4 yagmail
+#
+#      - name: Run script
+#        env:
+#          SMTP_USER: ${{ secrets.SMTP_USER }}
+#          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+#          TO_EMAIL: ${{ secrets.TO_EMAIL }}
+#        run: |
+#          python <<EOF
+#          import os
+#          import requests
+#          from bs4 import BeautifulSoup
+#          import yagmail
+#
+#          URL = "https://example.com"
+#          BUTTON_TEXT = "立即购买"
+#          SMTP_USER = os.getenv("SMTP_USER")
+#          SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+#          TO_EMAIL = os.getenv("TO_EMAIL")
+#
+#          def check_button():
+#              try:
+#                  response = requests.get(URL, timeout=10)
+#                  response.raise_for_status()
+#                  soup = BeautifulSoup(response.text, "html.parser")
+#                  button = soup.find("button", string=BUTTON_TEXT)
+#                  if button:
+#                      print(f"按钮 '{BUTTON_TEXT}' 存在")
+#                      send_email()
+#                  else:
+#                      print(f"按钮 '{BUTTON_TEXT}' 不存在")
+#              except Exception as e:
+#                  print(f"出现错误: {e}")
+#
+#          def send_email():
+#              try:
+#                  yag = yagmail.SMTP(SMTP_USER, SMTP_PASSWORD)
+#                  subject = f"按钮 '{BUTTON_TEXT}' 出现"
+#                  body = f"按钮 '{BUTTON_TEXT}' 已在页面 {URL} 上出现，请及时处理。"
+#                  yag.send(to=TO_EMAIL, subject=subject, contents=body)
+#                  print("邮件发送成功")
+#              except Exception as e:
+#                  print(f"邮件发送失败: {e}")
+#
+#          if __name__ == "__main__":
+#              check_button()
+#          EOF
