@@ -98,8 +98,9 @@ def check_and_notice(config: WebsiteConfig):
                 f"发生错误,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} '{config.monitorText}' 错误:{e}"
             )
 
-print("SMTP_USER:", os.getenv("SMTP_USER"))
-print("SMTP_PASSWORD:", os.getenv("SMTP_PASSWORD"))
+
+# print("SMTP_USER:", os.getenv("SMTP_USER"))
+# print("SMTP_PASSWORD:", os.getenv("SMTP_PASSWORD"))
 # 初始化yagmail
 yag = yagmail.SMTP(os.getenv("SMTP_USER"), os.getenv("SMTP_PASSWORD"))
 
@@ -111,8 +112,8 @@ def send_email(config: WebsiteConfig):
         <html>
             <body>
                 <h2>{config.website}-{config.name} 现已有货!</h2>
-                <h3><a href='{PROXY_URL_PREFIX + config.url}'>点击查看商品</a></h3>
-                <p><img src='{PROXY_URL_PREFIX + config.pic}' alt='商品图片' style='max-width: 500px;'></p>
+                <h3><a href='{config.url}'>点击查看商品</a></h3>
+                <p><img src='{config.pic}' alt='商品图片' style='max-width: 500px;'></p>
                 <h4><small>此邮件为系统自动发送，请勿直接回复。</small></h4>
             </body>
         </html>
