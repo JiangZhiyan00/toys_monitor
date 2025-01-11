@@ -34,7 +34,7 @@ jobs:
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
-          name: notice_cache.json
+          name: notice_cache # 改这里：去掉 .json
           path: .
 
       - name: Create default file if not exists
@@ -56,5 +56,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: notice_cache.json
+          name: notice_cache
           path: notice_cache.json
+          retention-days: 1 # 保留 1 天
