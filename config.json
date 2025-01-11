@@ -7,7 +7,7 @@
     "elementType": "a",
     "monitorText": "ショッピングカートに入れる",
     "noticeSeconds": 900,
-    "timeout": 30,
+    "timeout": 15,
     "emails": ["jiangzhiyan937@gmail.com"]
   },
   {
@@ -29,7 +29,7 @@
     "elementType": "a",
     "monitorText": "ショッピングカートに入れる",
     "noticeSeconds": 900,
-    "timeout": 30,
+    "timeout": 15,
     "emails": ["jiangzhiyan937@gmail.com"]
   }
 ]

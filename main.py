@@ -30,6 +30,7 @@ def load_config(file_path: str) -> List[WebsiteConfig]:
     return [WebsiteConfig(**item) for item in data]
 
 
+PROXY_URL_PREFIX = "https://proxy.jzy88.top/"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
 }
@@ -62,17 +63,19 @@ def should_notice(email, url, notice_seconds):
 
 
 def check_and_notice(config: WebsiteConfig):
-    url = config.url
+    proxied_url = PROXY_URL_PREFIX + config.url
     notice_seconds = config.noticeSeconds
 
     for email in config.emails:
-        if not should_notice(email, url, notice_seconds):
-            print(f"{email} 对 {url} 在通知间隔内，跳过检查")
+        if not should_notice(email, config.url, notice_seconds):
+            print(f"{email} 对 {config.url} 在通知间隔内，跳过检查")
             continue
 
         try:
             # 发送请求
-            response = requests.get(config.url, headers=HEADERS, timeout=config.timeout)
+            response = requests.get(
+                proxied_url, headers=HEADERS, timeout=config.timeout
+            )
             response.raise_for_status()
 
             # 解析 HTML
@@ -85,7 +88,7 @@ def check_and_notice(config: WebsiteConfig):
                     f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} '{config.monitorText}' 存在"
                 )
                 send_email(config)
-                save_last_notice_time(email, url, time.time())
+                save_last_notice_time(email, config.url, time.time())
             else:
                 print(
                     f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} '{config.monitorText}' 不存在"
@@ -107,8 +110,8 @@ def send_email(config: WebsiteConfig):
         <html>
             <body>
                 <h2>{config.website}-{config.name} 现已有货!</h2>
-                <h3><a href='{config.url}'>点击查看商品</a></h3>
-                <p><img src='{config.pic}' alt='商品图片' style='max-width: 500px;'></p>
+                <h3><a href='{PROXY_URL_PREFIX + config.url}'>点击查看商品</a></h3>
+                <p><img src='{PROXY_URL_PREFIX + config.pic}' alt='商品图片' style='max-width: 500px;'></p>
                 <h4><small>此邮件为系统自动发送，请勿直接回复。</small></h4>
             </body>
         </html>
