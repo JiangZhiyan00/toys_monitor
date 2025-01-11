@@ -98,7 +98,8 @@ def check_and_notice(config: WebsiteConfig):
                 f"发生错误,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} '{config.monitorText}' 错误:{e}"
             )
 
-
+print("SMTP_USER:", os.getenv("SMTP_USER"))
+print("SMTP_PASSWORD:", os.getenv("SMTP_PASSWORD"))
 # 初始化yagmail
 yag = yagmail.SMTP(os.getenv("SMTP_USER"), os.getenv("SMTP_PASSWORD"))
 
