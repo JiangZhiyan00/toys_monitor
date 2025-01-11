@@ -22,7 +22,7 @@ jobs:
 
       # 如果文件存在，下载上次上传的 Artifacts
       - name: Download previous artifacts
-        if: ${{ github.event_name == 'workflow_dispatch' || (steps.check-cache.outputs.found == 'true') }}
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         uses: actions/download-artifact@v4
         with:
           name: notice_cache
@@ -38,7 +38,7 @@ jobs:
 
       # 如果文件存在，则上传 Artifacts
       - name: Upload new artifacts
-        if: always() && success() && (steps.cache-output-file.exists == 'true')
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: notice_cache
