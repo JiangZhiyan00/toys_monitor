@@ -83,7 +83,7 @@ def check_and_notice(config: WebsiteConfig):
                 print(
                     f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} '{config.monitorText}' 存在"
                 )
-                send_email(config)
+                send_email(config, email)
                 save_last_notice_time(email, config.url, time.time())
             else:
                 print(
@@ -95,7 +95,7 @@ def check_and_notice(config: WebsiteConfig):
             )
 
 
-def send_email(config: WebsiteConfig):
+def send_email(config: WebsiteConfig, email: str):
     try:
         with yagmail.SMTP(os.getenv("SMTP_USER"), os.getenv("SMTP_PASSWORD")) as yag:
             # 构建一个完整的HTML邮件内容
@@ -110,16 +110,16 @@ def send_email(config: WebsiteConfig):
             </html>
             """
             yag.send(
-                to=config.emails,
+                to=email,
                 subject=f"{config.website}-{config.name} 现已有货!",
                 contents=[html_content],  # 将整个HTML内容作为一个字符串发送
             )
             print(
-                f"邮件发送成功,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {config.emails}"
+                f"邮件发送成功,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {email}"
             )
     except Exception as e:
         print(
-            f"邮件发送失败,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {config.emails} error: {e}"
+            f"邮件发送失败,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {email} error: {e}"
         )
 
 
