@@ -26,8 +26,6 @@ jobs:
         with:
           path: notice_cache.json
           key: notice-cache-${{ runner.os }}
-          restore-keys: |
-            notice-cache-${{ runner.os }}
 
       - name: Run script
         env:
