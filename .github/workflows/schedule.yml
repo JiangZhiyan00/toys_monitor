@@ -1,0 +1,44 @@
+name: Scheduled Task
+
+on:
+  schedule:
+    - cron: "*/10 * * * *" # 每10分钟运行一次
+  workflow_dispatch: # 手动触发任务
+
+jobs:
+  check-element-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13.0"
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 yagmail
+
+      - name: Restore cached files
+        id: cache-files
+        uses: actions/cache@v4
+        with:
+          path: notice_cache.json
+          key: notice-cache-${{ runner.os }}
+          restore-keys: |
+            notice-cache-${{ runner.os }}
+
+      - name: Run script
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          python main.py
+
+      - name: Cache new files
+        if: always()
+        uses: actions/cache@v4
+        with:
+          path: notice_cache.json
+          key: notice-cache-${{ runner.os }}

@@ -1,0 +1,35 @@
+[
+  {
+    "website": "yodobashi",
+    "name": "成龙-香港国際警察",
+    "pic": "https://image.yodobashi.com/product/100/000/001/008/874/972/100000001008874972_10204_001.jpg",
+    "url": "https://www.yodobashi.com/product/100000001008874972/",
+    "elementType": "a",
+    "monitorText": "ショッピングカートに入れる",
+    "noticeSeconds": 900,
+    "timeout": 30,
+    "emails": ["jiangzhiyan937@gmail.com"]
+  },
+  {
+    "website": "yodobashi",
+    "name": "仮面ライダー555",
+    "pic": "https://image.yodobashi.com/product/100/000/001/008/874/982/100000001008874982_10204.jpg",
+    "url": "https://www.yodobashi.com/product/100000001008874982/",
+    "elementType": "a",
+    "monitorText": "ショッピングカートに入れる",
+    "noticeSeconds": 900,
+    "timeout": 30,
+    "emails": ["jiangzhiyan937@gmail.com"]
+  },
+  {
+    "website": "yodobashi",
+    "name": "No.791 RAH シン",
+    "pic": "https://image.yodobashi.com/product/100/000/001/007/723/906/100000001007723906_10204_001.jpg",
+    "url": "https://www.yodobashi.com/product/100000001007723906/",
+    "elementType": "a",
+    "monitorText": "ショッピングカートに入れる",
+    "noticeSeconds": 900,
+    "timeout": 30,
+    "emails": ["jiangzhiyan937@gmail.com"]
+  }
+]
