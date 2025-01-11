@@ -9,6 +9,7 @@ import yagmail
 from bs4 import BeautifulSoup
 from urllib.parse import quote
 import threading
+from concurrent.futures import ThreadPoolExecutor
 
 
 @dataclass
@@ -99,53 +100,40 @@ def check_and_notice(config: WebsiteConfig):
             )
 
 
-# print("SMTP_USER:", os.getenv("SMTP_USER"))
-# print("SMTP_PASSWORD:", os.getenv("SMTP_PASSWORD"))
-# 初始化yagmail
-yag = yagmail.SMTP(os.getenv("SMTP_USER"), os.getenv("SMTP_PASSWORD"))
-
-
 def send_email(config: WebsiteConfig):
     try:
-        # 构建一个完整的HTML邮件内容
-        html_content = f"""
-        <html>
-            <body>
-                <h2>{config.website}-{config.name} 现已有货!</h2>
-                <h3><a href='{config.url}'>点击查看商品</a></h3>
-                <p><img src='{config.pic}' alt='商品图片' style='max-width: 500px;'></p>
-                <h4><small>此邮件为系统自动发送，请勿直接回复。</small></h4>
-            </body>
-        </html>
-        """
-        yag.send(
-            to=config.emails,
-            subject=f"{config.website}-{config.name} 现已有货!",
-            contents=[html_content],  # 将整个HTML内容作为一个字符串发送
-        )
-        print(f"邮件发送成功, emails: {config.emails}")
+        with yagmail.SMTP(os.getenv("SMTP_USER"), os.getenv("SMTP_PASSWORD")) as yag:
+            # 构建一个完整的HTML邮件内容
+            html_content = f"""
+            <html>
+                <body>
+                    <h2>{config.website}-{config.name} 现已有货!</h2>
+                    <h3><a href='{config.url}'>点击查看商品</a></h3>
+                    <p><img src='{config.pic}' alt='商品图片' style='max-width: 500px;'></p>
+                    <h4><small>此邮件为系统自动发送，请勿直接回复。</small></h4>
+                </body>
+            </html>
+            """
+            yag.send(
+                to=config.emails,
+                subject=f"{config.website}-{config.name} 现已有货!",
+                contents=[html_content],  # 将整个HTML内容作为一个字符串发送
+            )
+            print(f"邮件发送成功, emails: {config.emails}")
     except Exception as e:
         print(f"邮件发送失败, emails: {config.emails} error: {e}")
 
 
 if __name__ == "__main__":
     try:
+        print("任务开始......")
         configs = load_config("config.json")
-        threads = []
 
-        # 创建并启动线程
-        for config in configs:
-            thread = threading.Thread(target=check_and_notice, args=(config,))
-            thread.start()
-            threads.append(thread)
-
-        # 等待所有线程完成
-        for thread in threads:
-            thread.join()
-
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            for config in configs:
+                executor.submit(check_and_notice, config)
     except Exception as e:
         print(f"发生错误: {e}")
     finally:
-        if yag:
-            yag.close()
+        print("任务结束......")
         exit(0)
