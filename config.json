@@ -6,9 +6,9 @@
     "url": "https://www.yodobashi.com/product/100000001008874972/",
     "elementType": "a",
     "monitorText": "ショッピングカートに入れる",
-    "noticeSeconds": 1200,
+    "noticeSeconds": 1800,
     "timeout": 15,
-    "emails": ["jiangzhiyan937@gmail.com"]
+    "emails": ["jiangzhiyan937@gmail.com", "807242867@qq.com"]
   },
   {
     "website": "yodobashi",
@@ -17,19 +17,8 @@
     "url": "https://www.yodobashi.com/product/100000001008874982/",
     "elementType": "a",
     "monitorText": "ショッピングカートに入れる",
-    "noticeSeconds": 1200,
+    "noticeSeconds": 1800,
     "timeout": 15,
-    "emails": ["jiangzhiyan937@gmail.com"]
-  },
-  {
-    "website": "yodobashi",
-    "name": "No.791 RAH シン",
-    "pic": "https://image.yodobashi.com/product/100/000/001/007/723/906/100000001007723906_10204_001.jpg",
-    "url": "https://www.yodobashi.com/product/100000001007723906/",
-    "elementType": "a",
-    "monitorText": "ショッピングカートに入れる",
-    "noticeSeconds": 1200,
-    "timeout": 15,
-    "emails": ["jiangzhiyan937@gmail.com"]
+    "emails": ["jiangzhiyan937@gmail.com", "807242867@qq.com"]
   }
 ]

@@ -7,8 +7,6 @@ from typing import List
 import requests
 import yagmail
 from bs4 import BeautifulSoup
-from urllib.parse import quote
-import threading
 from concurrent.futures import ThreadPoolExecutor
 
 
