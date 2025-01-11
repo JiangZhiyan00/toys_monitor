@@ -20,6 +20,7 @@ jobs:
       - name: Install dependencies
         run: pip install requests beautifulsoup4 yagmail
 
+      # 尝试恢复缓存文件
       - name: Restore cached files
         id: cache-files
         uses: actions/cache@v4
@@ -27,6 +28,7 @@ jobs:
           path: notice_cache.json
           key: notice-cache-${{ runner.os }}
 
+      # 执行脚本
       - name: Run script
         env:
           SMTP_USER: ${{ secrets.SMTP_USER }}
@@ -34,6 +36,12 @@ jobs:
         run: |
           python main.py
 
+      # 强制清除旧缓存文件
+      - name: Clear old cache
+        run: |
+          rm -f notice_cache.json || true
+
+      # 缓存新文件
       - name: Cache new files
         if: always()
         uses: actions/cache@v4
