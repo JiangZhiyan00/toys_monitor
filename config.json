@@ -6,7 +6,7 @@
     "url": "https://www.yodobashi.com/product/100000001008874972/",
     "elementType": "a",
     "monitorText": "ショッピングカートに入れる",
-    "noticeSeconds": 900,
+    "noticeSeconds": 1200,
     "timeout": 15,
     "emails": ["jiangzhiyan937@gmail.com"]
   },
@@ -17,8 +17,8 @@
     "url": "https://www.yodobashi.com/product/100000001008874982/",
     "elementType": "a",
     "monitorText": "ショッピングカートに入れる",
-    "noticeSeconds": 900,
-    "timeout": 30,
+    "noticeSeconds": 1200,
+    "timeout": 15,
     "emails": ["jiangzhiyan937@gmail.com"]
   },
   {
@@ -28,7 +28,7 @@
     "url": "https://www.yodobashi.com/product/100000001007723906/",
     "elementType": "a",
     "monitorText": "ショッピングカートに入れる",
-    "noticeSeconds": 900,
+    "noticeSeconds": 1200,
     "timeout": 15,
     "emails": ["jiangzhiyan937@gmail.com"]
   }

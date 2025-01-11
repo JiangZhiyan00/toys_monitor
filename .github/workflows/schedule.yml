@@ -28,7 +28,7 @@ jobs:
           path: notice_cache.json
           key: notice-cache-${{ runner.os }}
           restore-keys: |
-            notice-cache-${{ runner.os }}-
+            notice-cache-${{ runner.os }}
 
       # 执行脚本
       - name: Run script
@@ -44,4 +44,4 @@ jobs:
         uses: actions/cache@v4
         with:
           path: notice_cache.json
-          key: notice-cache-${{ runner.os }}-${{ github.run_id }}
+          key: notice-cache-${{ runner.os }}
