@@ -126,7 +126,7 @@ def send_email(config: WebsiteConfig, emails: List[str]):
             save_last_notice_time(emails, config.url, time.time())
     except Exception as e:
         print(
-            f"邮件发送失败,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {email} error: {e}"
+            f"邮件发送失败,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {emails} error: {e}"
         )
 
 
