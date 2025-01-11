@@ -20,15 +20,13 @@ jobs:
       - name: Install dependencies
         run: pip install requests beautifulsoup4 yagmail
 
-      # 尝试恢复缓存文件
-      - name: Restore cached files
-        id: cache-files
-        uses: actions/cache@v4
+      # 如果文件存在，下载上次上传的 Artifacts
+      - name: Download previous artifacts
+        if: ${{ github.event_name == 'workflow_dispatch' || (steps.check-cache.outputs.found == 'true') }}
+        uses: actions/download-artifact@v4
         with:
-          path: notice_cache.json
-          key: notice-cache-${{ runner.os }}
-          restore-keys: |
-            notice-cache-${{ runner.os }}
+          name: notice_cache
+          path: .
 
       # 执行脚本
       - name: Run script
@@ -38,10 +36,10 @@ jobs:
         run: |
           python main.py
 
-      # 缓存新文件
-      - name: Cache new files
-        if: always()
-        uses: actions/cache@v4
+      # 如果文件存在，则上传 Artifacts
+      - name: Upload new artifacts
+        if: always() && success() && (steps.cache-output-file.exists == 'true')
+        uses: actions/upload-artifact@v4
         with:
+          name: notice_cache
           path: notice_cache.json
-          key: notice-cache-${{ runner.os }}
