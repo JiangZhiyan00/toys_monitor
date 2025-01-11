@@ -64,18 +64,15 @@ def should_notice(email, url, notice_seconds):
 
 
 def check_and_notice(config: WebsiteConfig):
-    proxied_url = PROXY_URL_PREFIX + config.url
-    notice_seconds = config.noticeSeconds
-
     for email in config.emails:
-        if not should_notice(email, config.url, notice_seconds):
+        if not should_notice(email, config.url, config.noticeSeconds):
             print(f"{email} 对 {config.url} 在通知间隔内，跳过检查")
             continue
 
         try:
             # 发送请求
             response = requests.get(
-                proxied_url, headers=HEADERS, timeout=config.timeout
+                PROXY_URL_PREFIX + config.url, headers=HEADERS, timeout=config.timeout
             )
             response.raise_for_status()
 
@@ -119,9 +116,13 @@ def send_email(config: WebsiteConfig):
                 subject=f"{config.website}-{config.name} 现已有货!",
                 contents=[html_content],  # 将整个HTML内容作为一个字符串发送
             )
-            print(f"邮件发送成功, emails: {config.emails}")
+            print(
+                f"邮件发送成功,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {config.emails}"
+            )
     except Exception as e:
-        print(f"邮件发送失败, emails: {config.emails} error: {e}")
+        print(
+            f"邮件发送失败,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {config.emails} error: {e}"
+        )
 
 
 if __name__ == "__main__":
