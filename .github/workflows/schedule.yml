@@ -30,12 +30,15 @@ jobs:
         run: pip install -r requirements.txt
 
       # 下载上次上传的 Artifacts
-      - name: Download previous artifacts
-        uses: actions/download-artifact@v4
+      - name: Download artifacts from previous workflow
+        uses: dawidd6/action-download-artifact@v7
         continue-on-error: true
         with:
-          name: notice_cache # 改这里：去掉 .json
+          name: notice_cache
+          workflow_conclusion: success
+          if_no_artifact_found: warn
           path: .
+          search_artifacts: true
 
       - name: Create default file if not exists
         run: |
