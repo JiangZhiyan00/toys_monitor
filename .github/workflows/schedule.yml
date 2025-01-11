@@ -16,13 +16,22 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.13.0"
+          cache: "pip"
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.local/lib/python3.13/site-packages
+          key: pip-${{ runner.os }}
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 yagmail
+        run: pip install -r requirements.txt
 
-      # 如果文件存在，下载上次上传的 Artifacts
+      # 下载上次上传的 Artifacts
       - name: Download previous artifacts
-        if: ${{ github.event_name != 'workflow_dispatch' }}
+        # if: ${{ github.event_name != 'workflow_dispatch' }}
         uses: actions/download-artifact@v4
         with:
           name: notice_cache
@@ -36,7 +45,7 @@ jobs:
         run: |
           python main.py
 
-      # 如果文件存在，则上传 Artifacts
+      # 上传 Artifacts
       - name: Upload new artifacts
         if: always()
         uses: actions/upload-artifact@v4
