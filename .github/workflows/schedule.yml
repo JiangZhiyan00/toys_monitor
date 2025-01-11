@@ -31,11 +31,17 @@ jobs:
 
       # 下载上次上传的 Artifacts
       - name: Download previous artifacts
-        # if: ${{ github.event_name != 'workflow_dispatch' }}
         uses: actions/download-artifact@v4
+        continue-on-error: true
         with:
-          name: notice_cache
+          name: notice_cache.json
           path: .
+
+      - name: Create default file if not exists
+        run: |
+          if [ ! -f notice_cache.json ]; then
+            echo '{}' > notice_cache.json
+          fi
 
       # 执行脚本
       - name: Run script
@@ -50,5 +56,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: notice_cache
+          name: notice_cache.json
           path: notice_cache.json
