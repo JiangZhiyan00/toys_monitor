@@ -8,12 +8,12 @@ on:
 jobs:
   check-element-job:
     runs-on: self-hosted
-    continue-on-error: true
+    #   continue-on-error: true
 
-  check-element-job-fallback:
-    needs: check-element-job
-    if: ${{ failure() }}
-    runs-on: ubuntu-22.04
+    # check-element-job-fallback:
+    #   needs: check-element-job
+    #   if: ${{ failure() }}
+    #   runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout repository
