@@ -7,15 +7,13 @@ on:
 
 jobs:
   check-element-job:
-    strategy:
-      fail-fast: false
-      matrix:
-        runner: [self-hosted, ubuntu-22.04]
-    runs-on: ${{ matrix.runner }}
-    # 如果是 ubuntu-22.04，只有在 self-hosted 失败时才运行
-    if: |
-      matrix.runner == 'self-hosted' ||
-      (matrix.runner == 'ubuntu-22.04' && failure())
+    runs-on: self-hosted
+    continue-on-error: true
+
+  check-element-job-fallback:
+    needs: check-element-job
+    if: ${{ failure() }}
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout repository
