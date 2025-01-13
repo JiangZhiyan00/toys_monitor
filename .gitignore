@@ -20,6 +20,7 @@ cover
 .python-version
 .tox
 .vscode
+.history
 _build
 _images
 _modules

@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import List
 
 import requests
+import jsoncomment
 import yagmail
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
@@ -25,7 +26,8 @@ class WebsiteConfig:
 
 def load_config(file_path: str) -> List[WebsiteConfig]:
     with open(file_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
+        json_parser = jsoncomment.JsonComment(json)
+        data = json_parser.load(f)
     return [WebsiteConfig(**item) for item in data]
 
 
@@ -100,7 +102,9 @@ def check_and_notice(config: WebsiteConfig):
 
 def send_email(config: WebsiteConfig, emails: List[str]):
     if not emails:
-        print(f"没有需要通知的邮箱")
+        print(
+            f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} 没有需要通知的邮箱"
+        )
         return
     try:
         with yagmail.SMTP(os.getenv("SMTP_USER"), os.getenv("SMTP_PASSWORD")) as yag:
