@@ -11,6 +11,12 @@ from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
 
 
+PROXY_URL_PREFIX = "https://proxy.jzy88.top/"
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
+}
+
+
 @dataclass
 class WebsiteConfig:
     website: str
@@ -19,9 +25,10 @@ class WebsiteConfig:
     url: str
     elementType: str
     monitorText: str
-    noticeSeconds: int
-    timeout: int
     emails: List[str]
+    needProxy: bool = False
+    noticeSeconds: int = 1800
+    timeout: int = 15
 
 
 def load_config(file_path: str) -> List[WebsiteConfig]:
@@ -29,12 +36,6 @@ def load_config(file_path: str) -> List[WebsiteConfig]:
         json_parser = jsoncomment.JsonComment(json)
         data = json_parser.load(f)
     return [WebsiteConfig(**item) for item in data]
-
-
-PROXY_URL_PREFIX = "https://proxy.jzy88.top/"
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0"
-}
 
 
 def get_cache_key(email, url):
@@ -68,7 +69,9 @@ def check_and_notice(config: WebsiteConfig):
     try:
         # 发送请求
         response = requests.get(
-            PROXY_URL_PREFIX + config.url, headers=HEADERS, timeout=config.timeout
+            PROXY_URL_PREFIX + config.url if config.needProxy else config.url,
+            headers=HEADERS,
+            timeout=config.timeout,
         )
         response.raise_for_status()
 

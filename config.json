@@ -1,16 +1,17 @@
 // ！！！警告，可以有注释，但除去注释部分，务必确保格式正确！！！
 [
-  //  {
-  //    "website": "yodobashi",
-  //    "name": "成龙-香港国際警察",
-  //    "pic": "https://image.yodobashi.com/product/100/000/001/008/874/972/100000001008874972_10204_001.jpg",
-  //    "url": "https://www.yodobashi.com/product/100000001008874972/",
-  //    "elementType": "a",
-  //    "monitorText": "ショッピングカートに入れる",
-  //    "noticeSeconds": 1800,
-  //    "timeout": 15,
-  //    "emails": ["jiangzhiyan937@gmail.com", "807242867@qq.com"]
-  //  },
+  // {
+  //   "website": "yodobashi",
+  //   "name": "成龙-香港国際警察",
+  //   "pic": "https://image.yodobashi.com/product/100/000/001/008/874/972/100000001008874972_10204_001.jpg",
+  //   "url": "https://www.yodobashi.com/product/100000001008874972/",
+  //   "elementType": "a",
+  //   "monitorText": "ショッピングカートに入れる",
+  //   "needProxy": true,
+  //   "noticeSeconds": 1800,
+  //   "timeout": 15,
+  //   "emails": ["jiangzhiyan937@gmail.com", "807242867@qq.com"]
+  // },
   {
     "website": "yodobashi",
     "name": "仮面ライダー555",
@@ -18,8 +19,21 @@
     "url": "https://www.yodobashi.com/product/100000001008874982/",
     "elementType": "a",
     "monitorText": "ショッピングカートに入れる",
+    "needProxy": true,
     "noticeSeconds": 1800,
     "timeout": 15,
     "emails": ["jiangzhiyan937@gmail.com", "807242867@qq.com"]
+  },
+  {
+    "website": "biccamera",
+    "name": "【再販】S.H.Figuarts（真骨彫製法） 仮面ライダー555",
+    "pic": "https://image.biccamera.com/img/00000013763211_A01.jpg?sr.dw=600&sr.jqh=60&sr.dh=600&sr.mat=1",
+    "url": "https://www.biccamera.com/bc/item/13763211/",
+    "elementType": "span",
+    "monitorText": "カートに入れる",
+    "needProxy": false,
+    "noticeSeconds": 1800,
+    "timeout": 15,
+    "emails": ["jiangzhiyan937@gmail.com"]
   }
 ]
