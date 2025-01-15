@@ -9,27 +9,30 @@ jobs:
   check-element-job:
     # runs-on: self-hosted
     runs-on: ubuntu-22.04
+    timeout-minutes: 2 # 超时限制
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13.0"
-          cache: "pip"
+        run: |
+          echo "Using pre-installed Python"
+          python3 --version
+          python3 -m pip install --upgrade pip
 
       - name: Cache pip packages
         uses: actions/cache@v4
         with:
           path: |
             ~/.cache/pip
-            ~/.local/lib/python3.13/site-packages
-          key: pip-${{ runner.os }}
+            ~/.local/lib/python*
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip3 install -r requirements.txt
 
       # 下载上次上传的 Artifacts
       - name: Download artifacts from previous workflow
@@ -44,7 +47,7 @@ jobs:
 
       - name: Create default file if not exists
         run: |
-          if [ ! -f notice_cache.json ]; then
+          if [ ! -f "notice_cache.json" ] || [ ! -s "notice_cache.json" ]; then
             echo '{}' > notice_cache.json
           fi
 
@@ -53,8 +56,9 @@ jobs:
         env:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        timeout-minutes: 1
         run: |
-          python main.py
+          python3 main.py
 
       # 上传 Artifacts
       - name: Upload new artifacts
