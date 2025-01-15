@@ -9,6 +9,7 @@ import jsoncomment
 import yagmail
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor
+from bs4 import Tag
 
 
 PROXY_URL_PREFIX = "https://proxy.jzy88.top/"
@@ -23,12 +24,13 @@ class WebsiteConfig:
     name: str
     pic: str
     url: str
-    elementType: str
+    elementTypes: List[str]
     monitorText: str
     emails: List[str]
     needProxy: bool = False
     noticeSeconds: int = 1800
-    timeout: int = 15
+    timeout: int = 5
+    maxRetries: int = 3
 
 
 def load_config(file_path: str) -> List[WebsiteConfig]:
@@ -65,24 +67,74 @@ def should_notice(email, url, notice_seconds):
     return time.time() - last_time >= notice_seconds
 
 
+def find_nested_element(
+    soup: BeautifulSoup, element_types: list[str], target_text: str
+) -> list[Tag]:
+
+    if not element_types:
+        return []
+
+    parents = [soup]
+    # 查找除最后一个元素外的所有父元素
+    for element_type in element_types[:-1]:
+        new_parents = []
+        for parent in parents:
+            found = parent.find_all(element_type)
+            new_parents.extend(found)
+        parents = new_parents
+        if not parents:
+            return []
+
+    # 查找所有包含指定文本的元素
+    results = []
+    for parent in parents:
+        found = parent.find_all(element_types[-1], string=target_text)
+        results.extend(found)
+    return results
+
+
+def make_request_with_retry(
+    url: str, headers: dict, timeout: int, max_retries: int = 3
+) -> requests.Response:
+    for retry in range(max_retries):
+        try:
+            response = requests.get(url, headers=headers, timeout=timeout)
+
+            if response.status_code == 503 and retry < max_retries - 1:
+                print(f"遇到503错误，正在进行第{retry + 1}次重试...")
+                time.sleep(1)
+                continue
+
+            response.raise_for_status()
+            return response
+
+        except requests.exceptions.RequestException as e:
+            if retry == max_retries - 1:
+                raise
+            print(f"请求失败，正在进行第{retry + 1}次重试... 错误: {e}")
+            time.sleep(1)
+
+    raise requests.exceptions.RequestException(f"请求{url}, 重试{max_retries}次均失败")
+
+
 def check_and_notice(config: WebsiteConfig):
     try:
-        # 发送请求
-        response = requests.get(
+        # 使用封装的重试方法发送请求
+        response = make_request_with_retry(
             PROXY_URL_PREFIX + config.url if config.needProxy else config.url,
-            headers=HEADERS,
-            timeout=config.timeout,
+            HEADERS,
+            config.timeout,
+            config.maxRetries,
         )
-        response.raise_for_status()
 
         # 解析 HTML
         soup = BeautifulSoup(response.text, "html.parser")
 
         # 查找元素
-        button = soup.find(config.elementType, string=config.monitorText)
-        if button:
+        elements = find_nested_element(soup, config.elementTypes, config.monitorText)
+        if elements:
             print(
-                f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} '{config.monitorText}' 存在"
+                f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementTypes} '{config.monitorText}' 存在"
             )
 
             notice_emails = []
@@ -95,18 +147,18 @@ def check_and_notice(config: WebsiteConfig):
             send_email(config, notice_emails)
         else:
             print(
-                f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} '{config.monitorText}' 不存在"
+                f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementTypes} '{config.monitorText}' 不存在"
             )
     except Exception as e:
         print(
-            f"发生错误,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} '{config.monitorText}' 错误:{e}"
+            f"发生错误,网站:{config.website} 商品页面:{config.name} 元素:{config.elementTypes} '{config.monitorText}' 错误:{e}"
         )
 
 
 def send_email(config: WebsiteConfig, emails: List[str]):
     if not emails:
         print(
-            f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} 没有需要通知的邮箱"
+            f"网站:{config.website} 商品页面:{config.name} 元素:{config.elementTypes} 没有需要通知的邮箱"
         )
         return
     try:
@@ -128,12 +180,12 @@ def send_email(config: WebsiteConfig, emails: List[str]):
                 contents=[html_content],  # 将整个HTML内容作为一个字符串发送
             )
             print(
-                f"邮件发送成功,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {emails}"
+                f"邮件发送成功,网站:{config.website} 商品页面:{config.name} 元素:{config.elementTypes} emails: {emails}"
             )
             save_last_notice_time(emails, config.url, time.time())
     except Exception as e:
         print(
-            f"邮件发送失败,网站:{config.website} 商品页面:{config.name} 元素:{config.elementType} emails: {emails} error: {e}"
+            f"邮件发送失败,网站:{config.website} 商品页面:{config.name} 元素:{config.elementTypes} emails: {emails} error: {e}"
         )
 
 
