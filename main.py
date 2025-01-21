@@ -101,7 +101,7 @@ def make_request_with_retry(
             response = requests.get(url, headers=headers, timeout=timeout)
 
             if response.status_code == 503 and retry < max_retries - 1:
-                print(f"请求{url}, 遇到503错误，正在进行第{retry + 1}次重试...")
+                print(f"请求{url} ,遇到503错误，正在进行第{retry + 1}次重试...")
                 time.sleep(1)
                 continue
 
@@ -111,10 +111,10 @@ def make_request_with_retry(
         except requests.exceptions.RequestException as e:
             if retry == max_retries - 1:
                 raise
-            print(f"请求{url}, 失败，正在进行第{retry + 1}次重试... 错误: {e}")
+            print(f"请求{url} ,失败，正在进行第{retry + 1}次重试... 错误: {e}")
             time.sleep(1)
 
-    raise requests.exceptions.RequestException(f"请求{url}, 重试{max_retries}次均失败")
+    raise requests.exceptions.RequestException(f"请求{url} ,重试{max_retries}次均失败")
 
 
 def check_and_notice(config: WebsiteConfig):
