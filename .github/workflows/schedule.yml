@@ -7,7 +7,7 @@ on:
 
 jobs:
   check-element-job:
-    runs-on: [self-hosted, ubuntu-22.04]
+    runs-on: self-hosted
     timeout-minutes: 2 # 超时限制
 
     steps:
