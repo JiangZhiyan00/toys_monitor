@@ -1,4 +1,4 @@
-requests
-beautifulsoup4
-yagmail
-jsoncomment
+requests==2.32.3
+beautifulsoup4==4.13.4
+yagmail==0.15.293
+jsoncomment==0.4.2
